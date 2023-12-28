@@ -1,0 +1,37 @@
+.import_modal {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(51 51 51 / 47%);
+}
+
+.modal_body {
+    width: 400px;
+    background-color: white;
+    height: min-content;
+    border-radius: 5px;
+}
+
+.modal_body .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal_body .header h4 {
+    padding: 0;
+    margin: 0;
+    font-weight: 600;
+}
+
+.modal_body .body {
+    padding: 10px 15px;
+}

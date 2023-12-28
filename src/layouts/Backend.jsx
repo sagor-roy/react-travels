@@ -5,6 +5,7 @@ import "../assets/backend/bower_components/font-awesome/css/font-awesome.min.css
 import "../assets/backend/bower_components/Ionicons/css/ionicons.min.css";
 import "../assets/backend/dist/css/AdminLTE.min.css";
 import "../assets/backend/dist/css/skins/_all-skins.min.css";
+import "../assets/modal.css";
 import "../assets/backend/bower_components/morris.js/morris.css";
 import "../assets/backend/bower_components/jvectormap/jquery-jvectormap.css";
 import "../assets/backend/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css";
@@ -20,7 +21,7 @@ function Backend() {
       <div className="wrapper">
         <Header />
         <Sidebar />
-        <div className="content-wrapper">
+        <div className="content-wrapper" style={{ height: '120vh' }}>
           <Outlet />
         </div>
         <Footer />
