@@ -8,26 +8,6 @@ import Swal from 'sweetalert2';
 import Modal from '../../../partials/_Modal';
 import Page from '../../../partials/_Page';
 
-const columns = [
-  {
-    name: 'Title',
-    selector: row => row.title,
-    sortable: true,
-  },
-  {
-    name: 'Year',
-    selector: row => row.year,
-    sortable: true
-  },
-  {
-    name: 'Action',
-    cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin`}>Edit</Link><Link className='btn btn-xs btn-danger' to={`/admin`}>Edit</Link></>,
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-  },
-];
-
 const DestinationList = () => {
 
   const [data, setData] = useState([]);
@@ -38,11 +18,35 @@ const DestinationList = () => {
   const [modal, setModal] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [file, setFile] = useState(null);
+  const [columns, setColumns] = useState([
+    {
+      name: 'Destination',
+      selector: row => row.destination,
+      sortable: true,
+    },
+    {
+      name: 'Description',
+      selector: row => row.description,
+      sortable: true
+    },
+    {
+      name: 'Status',
+      selector: row => row.status,
+      sortable: true
+    },
+    {
+      name: 'Action',
+      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin`}>Edit</Link><Link className='btn btn-xs btn-danger' to={`/admin`}>Delete</Link></>,
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ]);
   // api endpoint
   const endpoint = process.env.REACT_APP_API_ENDPOINT;
 
   // Excel export
-  const header = ["title", "year"];
+  const header = ["Destination", "Description", "Status"];
   const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
   const excelDownload = () => {
     downloadExcel({
@@ -59,12 +63,13 @@ const DestinationList = () => {
   // Fetch data
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`${endpoint}/test?page=${activePage}&limit=${perPageLimit}&search=${search}`);
+      const response = await fetch(`${endpoint}/destination?page=${activePage}&limit=${perPageLimit}&search=${search}`);
       const resData = await response.json();
-      setPending(false);
-      setData(resData);
+      setData(resData?.data);
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setPending(false);
     }
   }, [activePage, perPageLimit, search]);
   // Fetch data end
@@ -100,18 +105,29 @@ const DestinationList = () => {
     formData.append('file', file);
 
     try {
-      await fetch(`${endpoint}/excel-store`, {
+      const response = await fetch(`${endpoint}/destination/excel-store`, {
         method: 'POST',
         body: formData,
       });
-    } catch (error) {
-      console.error('Upload error:', error);
-    } finally {
-      fetchData();
+      const result = await response.json();
       setPending(false)
-      toast.success("Data Successfully Import")
-      setModal(false);
-      setFile(null)
+      fetchData();
+      if (result?.status === 'success') {
+        toast.success("Data Successfully Import")
+        setModal(false);
+        setFile(null)
+      } else if (result?.status === 'error') {
+        for (const property in result?.data) {
+          if (Object.hasOwnProperty.call(result?.data, property)) {
+            const errors = result?.data[property];
+            toast.error(errors[0]);
+          }
+        }
+      } else {
+        toast.error(result?.message)
+      }
+    } catch (error) {
+      console.log('Upload error:', error);
     }
   };
   // Excel import end
@@ -140,7 +156,7 @@ const DestinationList = () => {
         confirmButtonText: "Yes, delete it!"
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await fetch(`${endpoint}/delete`, {
+          await fetch(`${endpoint}/destination/1`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',

@@ -39,7 +39,7 @@ const DestinationCreate = () => {
             <div className="form-group">
               <div className="row">
                 <div className="col-md-2">
-                  <label>Description<sup className="text-danger">*</sup> :</label>
+                  <label>Description:</label>
                 </div>
                 <div className="col-md-10">
                   <textarea
