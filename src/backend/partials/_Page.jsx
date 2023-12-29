@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function _Index({children, pageTitle}) {
+function _Page({children, pageTitle, url, status}) {
   return (
     <>
     <section className="content-header">
@@ -18,7 +18,7 @@ function _Index({children, pageTitle}) {
       <section className="content container-fluid">
         <div className="box box-primary">
           <div className="box-header with-border text-right">
-            <a href="" className="btn btn-sm btn-primary"><i className="fa fa-list"></i> List</a>
+            <Link to={url} className="btn btn-sm btn-primary"><i className={`fa fa-${status === 'create' ? 'plus':'list'}`}></i> {status === 'create' ? 'Add':'List'}</Link>
           </div>
           {children}
         </div>
@@ -27,4 +27,4 @@ function _Index({children, pageTitle}) {
   )
 }
 
-export default _Index
+export default _Page

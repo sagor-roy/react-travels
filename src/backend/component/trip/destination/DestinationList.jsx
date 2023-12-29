@@ -6,7 +6,7 @@ import ExampleFile from './file/example.xlsx';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import Modal from '../../../partials/_Modal';
-import Index from '../../../partials/_Index';
+import Page from '../../../partials/_Page';
 
 const columns = [
   {
@@ -176,7 +176,7 @@ const DestinationList = () => {
 
   return (
     <>
-      <Index pageTitle={`Destination`}>
+      <Page pageTitle={`Destination`} url={`/admin/destination/create`} status="create">
         <DataTable
           columns={columns}
           data={data}
@@ -191,7 +191,7 @@ const DestinationList = () => {
           perPageLimit={perPageLimit}
           selectedRows={selectedRows}
         />
-      </Index>
+      </Page>
 
       {/* import excel */}
       {modal && <Modal modalOpen={modalOpen} headerText={`Import`}>

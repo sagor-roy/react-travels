@@ -26,7 +26,7 @@ function Backend() {
           <Outlet />
           <Toaster />
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );
