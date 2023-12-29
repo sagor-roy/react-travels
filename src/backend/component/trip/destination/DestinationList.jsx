@@ -31,8 +31,16 @@ const DestinationList = () => {
     },
     {
       name: 'Status',
-      selector: row => row.status,
-      sortable: true
+      cell: (row) => (
+        <label className="switch">
+          <input type="checkbox"
+            onChange={(e) => statusHandler(row.id, e)}
+            checked={row?.status == 1 ? true : false}
+          />
+          <span className="slider round"></span>
+        </label>),
+      button: true,
+      allowOverflow: true
     },
     {
       name: 'Action',
@@ -189,6 +197,30 @@ const DestinationList = () => {
     setSearch(e.target.value)
   }
 
+  // status handler
+  const statusHandler = useCallback(async (id, e) => {
+    try {
+      await fetch(`${endpoint}/destination/status/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: e.target.checked ? "1" : "0" }),
+      });
+      // Update the data state immutably
+      setData(prevData => ({
+        ...prevData,
+        data: prevData?.data?.map(item =>
+          item.id === id ? { ...item, status: e.target.checked ? 0 : 1 } : item
+        ),
+      }));
+      toast.success('Status Updated');
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setData]);
+
+  console.log(data);
 
   return (
     <>
