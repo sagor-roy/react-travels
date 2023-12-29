@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import customStyles from '../../../../helper/DataTableHelper';
 import Paginate from '../../../partials/Paginate';
 import { downloadExcel } from 'react-export-table-to-excel';
-import ExampleFile from './file/example.xls'
+import ExampleFile from './file/example.xlsx'
 
 const DestinationList = () => {
 
@@ -13,6 +13,9 @@ const DestinationList = () => {
   const [perPageLimit, setPerPageLimit] = useState(10);
   const [search, setSearch] = useState("");
   const [pending, setPending] = useState(true);
+  const [modal, setModal] = useState(false);
+
+  const [file, setFile] = useState(null);
 
   const [columns, setColumns] = useState([
     {
@@ -34,7 +37,7 @@ const DestinationList = () => {
     },
   ]);
 
-  // Excel sheet
+  // Excel sheet export
   const header = ["title", "year"];
   const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
 
@@ -49,22 +52,55 @@ const DestinationList = () => {
     });
   }
 
-  useEffect(() => {
-    fetch(`http://travels.test/api/test?page=${activePage}&limit=${perPageLimit}&search=${search}`)
-      .then(response => response.json())
-      .then(data => {
-        setPending(false)
-        setData(data)
-      })
-      .catch(err => console.error(err));
-
-    // loaging
-    setPending(true)
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(`http://travels.test/api/test?page=${activePage}&limit=${perPageLimit}&search=${search}`);
+      const resData = await response.json();
+      setPending(false);
+      setData(resData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }, [activePage, perPageLimit, search]);
+
+  useEffect(() => {
+    fetchData();
+    setPending(true)
+  }, [fetchData]);
 
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
   }
+
+  const modalOpen = () => {
+    setModal(pre => !pre)
+  }
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!file) {
+      console.log('No file selected');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      await fetch('http://travels.test/api/excel-store', {
+        method: 'POST',
+        body: formData,
+      });
+      fetchData();
+      setModal(false);
+      setFile(null)
+    } catch (error) {
+      console.error('Upload error:', error);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
 
   return (
     <>
@@ -95,7 +131,7 @@ const DestinationList = () => {
               </select>
               <button className='btn btn-primary' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-fw fa-edit'></i>Edit</button>
               <button className='btn btn-danger' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-fw fa-trash'></i>Delete</button>
-              <button className='btn btn-success' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-file-excel-o'></i>Import</button>
+              <button onClick={modalOpen} className='btn btn-success' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-file-excel-o'></i>Import</button>
               <button onClick={excelDownload} className='btn btn-info' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-download'></i>Export</button>
             </div>
             <input style={{ width: '200px' }} placeholder='Search....' className='form-control' type="search" onChange={(e) => setSearch(e.target.value)} />
@@ -121,25 +157,27 @@ const DestinationList = () => {
 
 
       {/* import excel */}
-      <div className='import_modal'>
-        <div className="modal_body">
-          <div className="header">
-            <h4>Import</h4>
-            <button type="button" className='btn btn-danger btn-sm'><i className='fa fa-close'></i></button>
-          </div>
-          <div className="body">
-            <form style={{ marginTop: '10px' }}>
-              <input type="file" className='form-control' />
-              <div style={{ display:'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-              <button className='btn btn-primary btn-sm' type="submit">Import</button>
-              <a href={ExampleFile}>
-               <i className='fa fa-download'></i> Example Excel
-              </a>
-              </div>
-            </form>
+      {modal && (
+        <div className='import_modal'>
+          <div className="modal_body">
+            <div className="header">
+              <h4>Import</h4>
+              <button onClick={modalOpen} type="button" className='btn btn-danger btn-sm'><i className='fa fa-close'></i></button>
+            </div>
+            <div className="body">
+              <form style={{ marginTop: '10px' }} onSubmit={handleUpload}>
+                <input type="file" onChange={handleFileChange} className='form-control is-invalid' accept='.xlsx' />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+                  <button className='btn btn-primary btn-sm' type="submit">Import</button>
+                  <a href={ExampleFile}>
+                    <i className='fa fa-download'></i> Example Excel
+                  </a>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

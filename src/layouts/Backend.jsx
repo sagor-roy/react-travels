@@ -21,7 +21,7 @@ function Backend() {
       <div className="wrapper">
         <Header />
         <Sidebar />
-        <div className="content-wrapper" style={{ height: '120vh' }}>
+        <div className="content-wrapper" >
           <Outlet />
         </div>
         <Footer />
