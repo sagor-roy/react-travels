@@ -6,6 +6,7 @@ import ExampleFile from './file/example.xlsx';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import Modal from '../../../partials/_Modal';
+import Index from '../../../partials/_Index';
 
 const columns = [
   {
@@ -45,7 +46,7 @@ const DestinationList = () => {
   const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
   const excelDownload = () => {
     downloadExcel({
-      fileName: "name of file",
+      fileName: "Destination Excel File",
       sheet: "react-export-table-to-excel",
       tablePayload: {
         header,
@@ -175,40 +176,22 @@ const DestinationList = () => {
 
   return (
     <>
-      <section className="content-header">
-        <h1>
-          Destination
-          <small>Control Panel</small>
-        </h1>
-        <ol className="breadcrumb">
-          <li><Link to="/admin"><i className="fa fa-dashboard"></i> Dashboard</Link></li>
-          <li className="active">Destination</li>
-        </ol>
-      </section>
-
-      <section className="content container-fluid">
-        <div className="box box-primary">
-          <div className="box-header with-border text-right">
-            <a href="" className="btn btn-sm btn-primary"><i className="fa fa-list"></i> List</a>
-          </div>
-
-          <DataTable
-            columns={columns}
-            data={data}
-            handleChange={handleChange}
-            pending={pending}
-            handlePageChange={handlePageChange}
-            multiSelectDelete={multiSelectDelete}
-            modalOpen={modalOpen}
-            excelDownload={excelDownload}
-            perPageLimitHandler={perPageHandler}
-            searchHandler={searchHandler}
-            perPageLimit={perPageLimit}
-            selectedRows={selectedRows}
-          />
-
-        </div>
-      </section>
+      <Index pageTitle={`Destination`}>
+        <DataTable
+          columns={columns}
+          data={data}
+          handleChange={handleChange}
+          pending={pending}
+          handlePageChange={handlePageChange}
+          multiSelectDelete={multiSelectDelete}
+          modalOpen={modalOpen}
+          excelDownload={excelDownload}
+          perPageLimitHandler={perPageHandler}
+          searchHandler={searchHandler}
+          perPageLimit={perPageLimit}
+          selectedRows={selectedRows}
+        />
+      </Index>
 
       {/* import excel */}
       {modal && <Modal modalOpen={modalOpen} headerText={`Import`}>
