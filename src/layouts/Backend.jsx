@@ -13,6 +13,7 @@ import "../assets/backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.c
 import Header from '../backend/partials/Header';
 import Sidebar from '../backend/partials/Sidebar';
 import Footer from '../backend/partials/Footer';
+import { Toaster } from 'react-hot-toast';
 
 
 function Backend() {
@@ -23,6 +24,7 @@ function Backend() {
         <Sidebar />
         <div className="content-wrapper" >
           <Outlet />
+          <Toaster />
         </div>
         <Footer />
       </div>

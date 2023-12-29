@@ -10,10 +10,12 @@
     "react-data-table-component": "^7.5.4",
     "react-dom": "^18.2.0",
     "react-export-table-to-excel": "^1.0.6",
+    "react-hot-toast": "^2.4.1",
     "react-js-pagination": "^3.0.3",
     "react-router-dom": "^6.21.0",
     "react-scripts": "5.0.1",
     "styled-components": "5.0.0",
+    "sweetalert2": "^11.10.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
