@@ -13,6 +13,7 @@ const customStyles = () => {
             style: {
                 borderLeft: '1px solid #ddd',
                 borderBottom: '1px solid #ddd',
+                width: '5px'
             },
         },
     };
