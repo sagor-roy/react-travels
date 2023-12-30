@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import Modal from '../../../partials/_Modal';
 import Page from '../../../partials/_Page';
+import config from '../../../../config/config';
 
 const DestinationList = () => {
 
@@ -50,8 +51,6 @@ const DestinationList = () => {
       button: true,
     },
   ]);
-  // api endpoint
-  const endpoint = process.env.REACT_APP_API_ENDPOINT;
 
   // Excel export
   const header = ["Destination", "Description", "Status"];
@@ -71,13 +70,16 @@ const DestinationList = () => {
   // Fetch data
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`${endpoint}/destination?page=${activePage}&limit=${perPageLimit}&search=${search}`);
-      const resData = await response.json();
-      setData(resData?.data);
+      const response = await fetch(`${config.endpoint}/destination?page=${activePage}&limit=${perPageLimit}&search=${search}`);
+      const result = await response.json();
+      if (result?.status === 'success') {
+        setData(result?.data);
+        setPending(false);
+      } else {
+        toast.error(result?.message)
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
-    } finally {
-      setPending(false);
     }
   }, [activePage, perPageLimit, search]);
   // Fetch data end
@@ -86,6 +88,7 @@ const DestinationList = () => {
   useEffect(() => {
     fetchData();
     setPending(true)
+    console.log('render');
   }, [fetchData]);
   // Hooks end
 
@@ -113,7 +116,7 @@ const DestinationList = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${endpoint}/destination/excel-store`, {
+      const response = await fetch(`${config.endpoint}/destination/excel-store`, {
         method: 'POST',
         body: formData,
       });
@@ -164,22 +167,29 @@ const DestinationList = () => {
         confirmButtonText: "Yes, delete it!"
       }).then(async (result) => {
         if (result.isConfirmed) {
-          await fetch(`${endpoint}/destination/1`, {
+          const response = await fetch(`${config.endpoint}/destination/1`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ selectedRows }),
           });
+          const result = await response.json();
 
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success"
-          });
-
-          fetchData();
-          setSelectedRows([]);
+          if (result?.status === 'success') {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success"
+            });
+            setData(prevData => ({
+              ...prevData,
+              data: prevData?.data?.filter(item => !selectedRows.includes(item?.id))
+            }));
+            setSelectedRows([]);
+          } else {
+            toast.error(result?.message)
+          }
         }
       });
     } catch (error) {
@@ -200,27 +210,32 @@ const DestinationList = () => {
   // status handler
   const statusHandler = useCallback(async (id, e) => {
     try {
-      await fetch(`${endpoint}/destination/status/${id}`, {
+      const response = await fetch(`${config.endpoint}/destination/status/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ status: e.target.checked ? "1" : "0" }),
       });
-      // Update the data state immutably
-      setData(prevData => ({
-        ...prevData,
-        data: prevData?.data?.map(item =>
-          item.id === id ? { ...item, status: e.target.checked ? 0 : 1 } : item
-        ),
-      }));
-      toast.success('Status Updated');
+      const result = await response.json();
+
+      if (result?.status === 'success') {
+        // Update the data state immutably
+        setData(prevData => ({
+          ...prevData,
+          data: prevData?.data?.map(item =>
+            item.id === id ? { ...item, status: e.target.checked ? 0 : 1 } : item
+          ),
+        }));
+        toast.success('Status Updated');
+      } else {
+        toast.error(result?.message)
+      }
     } catch (error) {
       console.log(error);
     }
-  }, [setData]);
+  }, []);
 
-  console.log(data);
 
   return (
     <>

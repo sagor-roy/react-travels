@@ -1,15 +1,45 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Page from '../../../partials/_Page';
+import toast from 'react-hot-toast';
+import config from '../../../../config/config';
 
 const DestinationCreate = () => {
   const [destination, setDestination] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', { destination, description, status });
+    try {
+      const response = await fetch(`${config.endpoint}/destination`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ destination, description, status }),
+      });
+      const result = await response.json();
+      if (result?.status === 'success') {
+        setDestination("");
+        setDescription("");
+        setStatus("");
+        toast.success("Data Store Successfully!!");
+        navigate('/admin/destination/list');
+      } else if (result?.status === 'error') {
+        for (const property in result?.data) {
+          if (Object.hasOwnProperty.call(result?.data, property)) {
+            const errors = result?.data[property];
+            toast.error(errors[0]);
+          }
+        }
+      } else {
+        toast.error(result?.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -25,7 +55,6 @@ const DestinationCreate = () => {
                 <div className="col-md-10">
                   <input
                     type="text"
-                    required
                     name="destination"
                     className="form-control"
                     placeholder="Destination Name"
