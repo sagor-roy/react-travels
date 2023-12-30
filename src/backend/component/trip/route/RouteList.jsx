@@ -265,7 +265,7 @@ const RouteList = () => {
 
   return (
     <>
-      <Page pageTitle={`Destination`} url={`/admin/route/create`} status="create">
+      <Page pageTitle={`Route`} url={`/admin/route/create`} status="create">
         <DataTable
           columns={columns}
           data={data}

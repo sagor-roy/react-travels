@@ -6,21 +6,33 @@ import config from '../../../../config/config';
 import { useEffect } from 'react';
 
 const RouteCreate = ({ paramId }) => {
-  const [destination, setDestination] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState('');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [distance, setDistance] = useState('');
+  const [duration, setDuration] = useState('');
+  const [map, setMap] = useState('');
   const [status, setStatus] = useState('');
+  const [routes, setRoutes] = useState([]);
+
+
   const navigate = useNavigate();
 
   // fetch data
-  const fetchData = async () => {
+  const fetchEditData = async () => {
     if (paramId !== undefined) {
       try {
         const response = await fetch(`${config.endpoint}/route/${paramId}/edit`);
         const result = await response.json();
         if (result?.status === 'success') {
-          setDestination(result?.data?.destination)
-          setDescription(result?.data?.description)
-          setStatus(result?.data?.status)
+          const { data: route } = result || {};
+          setName(route?.name);
+          setFrom(route?.from);
+          setTo(route?.to);
+          setDistance(route?.distance);
+          setDuration(route?.duration);
+          setMap(route?.map);
+          setStatus(route?.status);
         } else {
           toast.error(result?.message)
         }
@@ -30,9 +42,37 @@ const RouteCreate = ({ paramId }) => {
     }
   };
 
+  const fetchRouteList = async () => {
+    try {
+      const response = await fetch(`${config.endpoint}/route/create`);
+      const result = await response.json();
+      if (result?.status === 'success') {
+        setRoutes(result?.data);
+      } else {
+        toast.error(result?.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchRouteList();
+    fetchEditData();
   }, []);
+
+  // Update name whenever from or to changes
+  useEffect(() => {
+    if (routes && routes.length > 0) {
+      const selectFrom = routes.find(item => item?.id == from);
+      const selectTo = routes.find(item => item?.id == to);
+      if (selectFrom || selectTo) {
+        const fromDestination = selectFrom?.destination || '';
+        const toDestination = selectTo?.destination || '';
+        setName(`${fromDestination}-${toDestination}`);
+      }
+    }
+  }, [from, to, routes]);
 
 
   const handleSubmit = async (e) => {
@@ -43,19 +83,24 @@ const RouteCreate = ({ paramId }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ destination, description, status }),
+        body: JSON.stringify({ name, from, to, distance, duration, map, status }),
       }) : await fetch(`${config.endpoint}/route/${paramId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ destination, description, status }),
+        body: JSON.stringify({ name, from, to, distance, duration, map, status }),
       });
       const result = await response.json();
+      console.log(result);
       if (result?.status === 'success') {
         if (paramId == undefined) {
-          setDestination("");
-          setDescription("");
+          setName("");
+          setFrom("");
+          setTo("");
+          setDistance("");
+          setDuration("");
+          setMap("");
           setStatus("");
           toast.success("Data Store Successfully!!");
           navigate('/admin/route/list');
@@ -79,45 +124,98 @@ const RouteCreate = ({ paramId }) => {
 
   return (
     <>
-      <Page pageTitle={`Destination`} url={`/admin/route/list`} status="list">
+      <Page pageTitle={`Route`} url={`/admin/route/list`} status="list">
         <form role="form" onSubmit={handleSubmit}>
           <div className="box-body">
             <div className="form-group">
               <div className="row">
                 <div className="col-md-2">
-                  <label>Destination Name<sup className="text-danger">*</sup> :</label>
+                  <label>Name<sup className="text-danger">*</sup> :</label>
                 </div>
                 <div className="col-md-10">
                   <input
                     type="text"
-                    name="destination"
+                    name="name"
+                    readOnly
                     className="form-control"
-                    placeholder="Destination Name"
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
+                    placeholder="Route Name"
+                    autoComplete="off"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
               </div>
             </div>
-
             <div className="form-group">
               <div className="row">
                 <div className="col-md-2">
-                  <label>Description:</label>
+                  <label>From<sup className="text-danger">*</sup> :</label>
                 </div>
                 <div className="col-md-10">
-                  <textarea
-                    name="description"
-                    placeholder="Description"
-                    rows="5"
+                  <select
+                    name="from"
+                    value={from}
+                    onChange={(e) => setFrom(e.target.value)}
                     className="form-control"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  ></textarea>
+                  >
+                    <option hidden >Select location</option>
+                    {routes?.map((item, index) => (
+                      <option key={index} value={item?.id}>{item?.destination}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
-
+            <div className="form-group">
+              <div className="row">
+                <div className="col-md-2">
+                  <label>To<sup className="text-danger">*</sup> :</label>
+                </div>
+                <div className="col-md-10">
+                  <select
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                    name="to"
+                    className="form-control"
+                  >
+                    <option hidden >Select location</option>
+                    {routes?.map((item, index) => (
+                      <option key={index} value={item?.id}>{item?.destination}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
+                <div className="col-md-2">
+                  <label>Distance<sup className="text-danger">*</sup> :</label>
+                </div>
+                <div className="col-md-10">
+                  <input value={distance} onChange={(e) => setDistance(e.target.value)} type="text" name="distance" className="form-control" placeholder="Distance" />
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
+                <div className="col-md-2">
+                  <label>Duration<sup className="text-danger">*</sup> :</label>
+                </div>
+                <div className="col-md-10">
+                  <input value={duration} onChange={(e) => setDuration(e.target.value)} type="text" name="duration" className="form-control" placeholder="Duration" />
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
+                <div className="col-md-2">
+                  <label>Google Map<sup className="text-danger">*</sup> :</label>
+                </div>
+                <div className="col-md-10">
+                  <textarea value={map} onChange={(e) => setMap(e.target.value)} name="map" placeholder="Google map link" rows="5" className="form-control"></textarea>
+                </div>
+              </div>
+            </div>
             <div className="form-group">
               <div className="row">
                 <div className="col-md-2">
