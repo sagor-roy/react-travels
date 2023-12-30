@@ -45,7 +45,7 @@ const DestinationList = () => {
     },
     {
       name: 'Action',
-      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin`}>Edit</Link><Link className='btn btn-xs btn-danger' to={`/admin`}>Delete</Link></>,
+      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => singleItemDeleteHandler(row?.id)} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
@@ -156,6 +156,16 @@ const DestinationList = () => {
 
   // multi select data delete handler
   const multiSelectDelete = async () => {
+    await deleteHandler(selectedRows.join(','))
+    setSelectedRows([]);
+  };
+
+  const singleItemDeleteHandler = async (id) => {
+    await deleteHandler(id);
+  }
+
+  // delete handler
+  const deleteHandler = async (id) => {
     try {
       Swal.fire({
         title: "Are you sure?",
@@ -167,12 +177,11 @@ const DestinationList = () => {
         confirmButtonText: "Yes, delete it!"
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const response = await fetch(`${config.endpoint}/destination/1`, {
+          const response = await fetch(`${config.endpoint}/destination/${id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ selectedRows }),
+            }
           });
           const result = await response.json();
 
@@ -182,11 +191,7 @@ const DestinationList = () => {
               text: "Your file has been deleted.",
               icon: "success"
             });
-            setData(prevData => ({
-              ...prevData,
-              data: prevData?.data?.filter(item => !selectedRows.includes(item?.id))
-            }));
-            setSelectedRows([]);
+            fetchData();
           } else {
             toast.error(result?.message)
           }
@@ -195,7 +200,7 @@ const DestinationList = () => {
     } catch (error) {
       console.error('Error:', error);
     }
-  };
+  }
 
   // every page data limit handler
   const perPageHandler = (e) => {
@@ -235,6 +240,7 @@ const DestinationList = () => {
       console.log(error);
     }
   }, []);
+
 
 
   return (
