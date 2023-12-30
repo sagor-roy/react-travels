@@ -88,7 +88,6 @@ const DestinationList = () => {
   useEffect(() => {
     fetchData();
     setPending(true)
-    console.log('render');
   }, [fetchData]);
   // Hooks end
 
