@@ -5,6 +5,9 @@ import Frontend from "./layouts/Frontend";
 import DestinationCreate from "./backend/component/trip/destination/DestinationCreate";
 import DestinationList from "./backend/component/trip/destination/DestinationList";
 import DestinationEdit from "./backend/component/trip/destination/DestinationEdit";
+import RouteCreate from "./backend/component/trip/route/RouteCreate";
+import RouteList from "./backend/component/trip/route/RouteList";
+import RouteEdit from "./backend/component/trip/route/RouteEdit";
 
 const router = createBrowserRouter([
     {
@@ -26,6 +29,18 @@ const router = createBrowserRouter([
             {
                 path: 'destination/edit/:id',
                 element: <DestinationEdit />,
+            },
+            {
+                path: 'route/create',
+                element: <RouteCreate />,
+            },
+            {
+                path: 'route/list',
+                element: <RouteList />,
+            },
+            {
+                path: 'route/edit/:id',
+                element: <RouteEdit />,
             },
         ],
     },

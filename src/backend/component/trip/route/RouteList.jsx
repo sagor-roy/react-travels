@@ -9,7 +9,7 @@ import Modal from '../../../partials/_Modal';
 import Page from '../../../partials/_Page';
 import config from '../../../../config/config';
 
-const DestinationList = () => {
+const RouteList = () => {
 
   const [data, setData] = useState([]);
   const [activePage, setActivePage] = useState(1);
@@ -27,13 +27,28 @@ const DestinationList = () => {
       button: true
     },
     {
-      name: 'Destination',
-      selector: row => row.destination,
+      name: 'Route Name',
+      selector: row => row.name,
       sortable: true,
     },
     {
-      name: 'Description',
-      selector: row => row.description,
+      name: 'From',
+      selector: row => row.from,
+      sortable: true,
+    },
+    {
+      name: 'To',
+      selector: row => row.to,
+      sortable: true,
+    },
+    {
+      name: 'Distance',
+      selector: row => row.distance,
+      sortable: true
+    },
+    {
+      name: 'Duration',
+      selector: row => row.duration,
       sortable: true
     },
     {
@@ -51,7 +66,7 @@ const DestinationList = () => {
     },
     {
       name: 'Action',
-      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin/destination/edit/${row?.id}`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => singleItemDeleteHandler(row?.id)} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
+      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin/route/edit/${row?.id}`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => singleItemDeleteHandler(row?.id)} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
@@ -59,11 +74,11 @@ const DestinationList = () => {
   ]);
 
   // Excel export
-  const header = ["Destination", "Description", "Status"];
+  const header = ["Route Name", "From", "To", "Distance", "Duration", "Map Link", "Status"];
   const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
   const excelDownload = () => {
     downloadExcel({
-      fileName: "Destination Excel File",
+      fileName: "Route Excel File",
       sheet: "react-export-table-to-excel",
       tablePayload: {
         header,
@@ -76,7 +91,7 @@ const DestinationList = () => {
   // Fetch data
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`${config.endpoint}/destination?page=${activePage}&limit=${perPageLimit}&search=${search}`);
+      const response = await fetch(`${config.endpoint}/route?page=${activePage}&limit=${perPageLimit}&search=${search}`);
       const result = await response.json();
       if (result?.status === 'success') {
         setData(result?.data);
@@ -121,7 +136,7 @@ const DestinationList = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${config.endpoint}/destination/excel-store`, {
+      const response = await fetch(`${config.endpoint}/route/excel-store`, {
         method: 'POST',
         body: formData,
       });
@@ -182,7 +197,7 @@ const DestinationList = () => {
         confirmButtonText: "Yes, delete it!"
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const response = await fetch(`${config.endpoint}/destination/${id}`, {
+          const response = await fetch(`${config.endpoint}/route/${id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -220,7 +235,7 @@ const DestinationList = () => {
   // status handler
   const statusHandler = useCallback(async (id, e) => {
     try {
-      const response = await fetch(`${config.endpoint}/destination/status/${id}`, {
+      const response = await fetch(`${config.endpoint}/route/status/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -250,7 +265,7 @@ const DestinationList = () => {
 
   return (
     <>
-      <Page pageTitle={`Destination`} url={`/admin/destination/create`} status="create">
+      <Page pageTitle={`Destination`} url={`/admin/route/create`} status="create">
         <DataTable
           columns={columns}
           data={data}
@@ -283,4 +298,4 @@ const DestinationList = () => {
   );
 };
 
-export default DestinationList;
+export default RouteList;

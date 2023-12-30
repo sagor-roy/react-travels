@@ -100,11 +100,11 @@ function Sidebar() {
                     children: [
                         {
                             title: "Add Route",
-                            url: "#"
+                            url: "route/create"
                         },
                         {
                             title: "Route List",
-                            url: "#"
+                            url: "route/list"
                         }
                     ]
                 },
