@@ -8,11 +8,16 @@ import DestinationEdit from "./backend/component/trip/destination/DestinationEdi
 import RouteCreate from "./backend/component/trip/route/RouteCreate";
 import RouteList from "./backend/component/trip/route/RouteList";
 import RouteEdit from "./backend/component/trip/route/RouteEdit";
+import { BackendProvider } from "./context/BackendContext";
 
 const router = createBrowserRouter([
     {
         path: "admin/",
-        element: <Backend />,
+        element: (
+            <BackendProvider>
+                <Backend />
+            </BackendProvider>
+        ),
         children: [
             {
                 index: '/',

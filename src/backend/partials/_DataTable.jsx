@@ -2,8 +2,13 @@ import React from 'react'
 import DataTable from 'react-data-table-component'
 import customStyles from '../../helper/DataTableHelper'
 import Paginate from './Paginate'
+import { useBackendConext } from '../../context/BackendContext'
 
-function _DataTable({ columns, data, handleChange, pending, handlePageChange, multiSelectDelete, modalOpen, excelDownload, perPageLimitHandler, searchHandler, perPageLimit, selectedRows }) {
+function _DataTable({ columns, data, multiSelectDelete, excelDownload, selectedRows }) {
+
+    const { state, dispatch } = useBackendConext();
+    const { perPageLimit, search, pending } = state;
+    const { modalOpen, handlePageChange, perPageLimitHandler, searchHandler, handleChange } = dispatch;
 
     return (
         <>
@@ -19,7 +24,7 @@ function _DataTable({ columns, data, handleChange, pending, handlePageChange, mu
                     <button onClick={modalOpen} className='btn btn-success' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-file-excel-o'></i>Import</button>
                     <button onClick={excelDownload} className='btn btn-info' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-download'></i>Export</button>
                 </div>
-                <input style={{ width: '200px' }} placeholder='Search....' className='form-control' type="search" onChange={searchHandler} />
+                <input style={{ width: '200px' }} value={search} placeholder='Search....' className='form-control' type="search" onChange={searchHandler} />
             </div>
 
             <div style={{ margin: '0 20px', border: '1px solid #ddd', }}>

@@ -74,7 +74,6 @@ const RouteCreate = ({ paramId }) => {
     }
   }, [from, to, routes]);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

@@ -1,6 +1,9 @@
 import React from 'react'
+import { useBackendConext } from '../../context/BackendContext'
 
-function Modal({children, modalOpen, headerText}) {
+function Modal({ children, headerText }) {
+    const { dispatch } = useBackendConext();
+    const { modalOpen } = dispatch;
     return (
         <div className='import_modal'>
             <div className="modal_body">

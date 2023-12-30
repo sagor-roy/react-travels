@@ -8,17 +8,13 @@ import Swal from 'sweetalert2';
 import Modal from '../../../partials/_Modal';
 import Page from '../../../partials/_Page';
 import config from '../../../../config/config';
+import { useBackendConext } from '../../../../context/BackendContext';
 
 const RouteList = () => {
-
+  const { state, dispatch } = useBackendConext();
+  const { modal, activePage, perPageLimit, search, pending, file, selectedRows } = state;
+  const { modalOpen, pendingHandler, handleFileChange } = dispatch;
   const [data, setData] = useState([]);
-  const [activePage, setActivePage] = useState(1);
-  const [perPageLimit, setPerPageLimit] = useState(10);
-  const [search, setSearch] = useState("");
-  const [pending, setPending] = useState(true);
-  const [modal, setModal] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [file, setFile] = useState(null);
   const [columns, setColumns] = useState([
     {
       name: 'Id',
@@ -95,7 +91,7 @@ const RouteList = () => {
       const result = await response.json();
       if (result?.status === 'success') {
         setData(result?.data);
-        setPending(false);
+        pendingHandler(false);
       } else {
         toast.error(result?.message)
       }
@@ -108,27 +104,17 @@ const RouteList = () => {
   // Hooks
   useEffect(() => {
     fetchData();
-    setPending(true)
+    pendingHandler(true)
   }, [fetchData]);
   // Hooks end
 
-  // Pagination current page number handler
-  const handlePageChange = (pageNumber) => {
-    setActivePage(pageNumber);
-  }
-
-  // modal
-  const modalOpen = () => {
-    setModal(pre => !pre)
-  }
-  // modal end 
 
   // Excel import
   const handleUpload = async (e) => {
     e.preventDefault();
-    setPending(true)
+    pendingHandler(true)
     if (!file) {
-      setPending(false)
+      pendingHandler(false)
       toast.error('No file selected');
       return;
     }
@@ -141,12 +127,11 @@ const RouteList = () => {
         body: formData,
       });
       const result = await response.json();
-      setPending(false)
+      pendingHandler(false)
       fetchData();
       if (result?.status === 'success') {
         toast.success("Data Successfully Import")
-        setModal(false);
-        setFile(null)
+        modalOpen();
       } else if (result?.status === 'error') {
         for (const property in result?.data) {
           if (Object.hasOwnProperty.call(result?.data, property)) {
@@ -163,21 +148,12 @@ const RouteList = () => {
   };
   // Excel import end
 
-  // File Handler
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  // selected row handler
-  const handleChange = useCallback(state => {
-    setSelectedRows(state?.selectedRows?.map(item => item?.id));
-  }, []);
 
 
   // multi select data delete handler
   const multiSelectDelete = async () => {
     await deleteHandler(selectedRows.join(','))
-    setSelectedRows([]);
+    //setSelectedRows([]);
   };
 
   const singleItemDeleteHandler = async (id) => {
@@ -222,15 +198,6 @@ const RouteList = () => {
     }
   }
 
-  // every page data limit handler
-  const perPageHandler = (e) => {
-    setPerPageLimit(e.target.value)
-  }
-
-  // search handler
-  const searchHandler = (e) => {
-    setSearch(e.target.value)
-  }
 
   // status handler
   const statusHandler = useCallback(async (id, e) => {
@@ -269,21 +236,13 @@ const RouteList = () => {
         <DataTable
           columns={columns}
           data={data}
-          handleChange={handleChange}
-          pending={pending}
-          handlePageChange={handlePageChange}
           multiSelectDelete={multiSelectDelete}
-          modalOpen={modalOpen}
           excelDownload={excelDownload}
-          perPageLimitHandler={perPageHandler}
-          searchHandler={searchHandler}
-          perPageLimit={perPageLimit}
-          selectedRows={selectedRows}
         />
       </Page>
 
       {/* import excel */}
-      {modal && <Modal modalOpen={modalOpen} headerText={`Import`}>
+      {modal && <Modal headerText={`Import`}>
         <form style={{ marginTop: '10px' }} onSubmit={handleUpload}>
           <input type="file" onChange={handleFileChange} className='form-control is-invalid' accept='.xlsx' />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
