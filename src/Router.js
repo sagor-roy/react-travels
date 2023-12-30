@@ -4,6 +4,7 @@ import Dashboard from "./backend/component/Dashboard";
 import Frontend from "./layouts/Frontend";
 import DestinationCreate from "./backend/component/trip/destination/DestinationCreate";
 import DestinationList from "./backend/component/trip/destination/DestinationList";
+import DestinationEdit from "./backend/component/trip/destination/DestinationEdit";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
             {
                 path: 'destination/list',
                 element: <DestinationList />,
+            },
+            {
+                path: 'destination/edit/:id',
+                element: <DestinationEdit />,
             },
         ],
     },

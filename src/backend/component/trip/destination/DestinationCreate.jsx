@@ -3,18 +3,49 @@ import { useNavigate } from 'react-router-dom';
 import Page from '../../../partials/_Page';
 import toast from 'react-hot-toast';
 import config from '../../../../config/config';
+import { useEffect } from 'react';
 
-const DestinationCreate = () => {
+const DestinationCreate = ({ paramId }) => {
   const [destination, setDestination] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('');
   const navigate = useNavigate();
 
+  // fetch data
+  const fetchData = async () => {
+    if (paramId !== undefined) {
+      try {
+        const response = await fetch(`${config.endpoint}/destination/${paramId}/edit`);
+        const result = await response.json();
+        if (result?.status === 'success') {
+          setDestination(result?.data?.destination)
+          setDescription(result?.data?.description)
+          setStatus(result?.data?.status)
+        } else {
+          toast.error(result?.message)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${config.endpoint}/destination`, {
+      const response = paramId == undefined ? await fetch(`${config.endpoint}/destination`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ destination, description, status }),
+      }) : await fetch(`${config.endpoint}/destination/${paramId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -22,11 +53,15 @@ const DestinationCreate = () => {
       });
       const result = await response.json();
       if (result?.status === 'success') {
-        setDestination("");
-        setDescription("");
-        setStatus("");
-        toast.success("Data Store Successfully!!");
-        navigate('/admin/destination/list');
+        if (paramId == undefined) {
+          setDestination("");
+          setDescription("");
+          setStatus("");
+          toast.success("Data Store Successfully!!");
+          navigate('/admin/destination/list');
+        } else {
+          toast.success("Data Update Successfully!!")
+        }
       } else if (result?.status === 'error') {
         for (const property in result?.data) {
           if (Object.hasOwnProperty.call(result?.data, property)) {
@@ -114,7 +149,7 @@ const DestinationCreate = () => {
           </div>
 
           <div className="box-footer text-right">
-            <button type="submit" className="btn btn-sm btn-success">Save</button>
+            <button type="submit" className="btn btn-sm btn-success">{paramId !== undefined ? 'Update' : 'Save'}</button>
           </div>
         </form>
       </Page>

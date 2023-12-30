@@ -45,7 +45,7 @@ const DestinationList = () => {
     },
     {
       name: 'Action',
-      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => singleItemDeleteHandler(row?.id)} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
+      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin/destination/edit/${row?.id}`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => singleItemDeleteHandler(row?.id)} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
