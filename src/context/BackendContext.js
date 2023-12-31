@@ -1,5 +1,6 @@
 // DataContext.js
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { downloadExcel } from 'react-export-table-to-excel';
 
 const BackendContext = createContext();
 
@@ -39,8 +40,18 @@ const BackendProvider = ({ children }) => {
     // selected row handler
     const handleChange = useCallback(state => {
         setSelectedRows(state?.selectedRows?.map(item => item?.id));
-        
+
     }, []);
+
+    // excel download
+    const excelDownload = (obj) => {
+        const { fileName, header, body } = obj;
+        downloadExcel({
+            fileName,
+            sheet: "react-export-table-to-excel",
+            tablePayload: { header, body, }
+        });
+    }
 
 
     const state = {
@@ -60,7 +71,8 @@ const BackendProvider = ({ children }) => {
         searchHandler,
         pendingHandler,
         handleFileChange,
-        handleChange
+        handleChange,
+        excelDownload
     }
 
     return (

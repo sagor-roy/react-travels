@@ -9,6 +9,7 @@ import Modal from '../../../partials/_Modal';
 import Page from '../../../partials/_Page';
 import config from '../../../../config/config';
 import { useBackendConext } from '../../../../context/BackendContext';
+import { excel } from 'react-export-table-to-excel/lib/lib';
 
 const DestinationList = () => {
   const { state, dispatch } = useBackendConext();
@@ -57,16 +58,8 @@ const DestinationList = () => {
   // Excel export
   const header = ["Destination", "Description", "Status"];
   const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
-  const excelDownload = () => {
-    downloadExcel({
-      fileName: "Destination Excel File",
-      sheet: "react-export-table-to-excel",
-      tablePayload: {
-        header,
-        body: body,
-      },
-    });
-  }
+  const fileName = "Destination Excel Sheet";
+  const excel = { header, body, fileName };
   // Excel export end
 
   // Fetch data
@@ -222,7 +215,7 @@ const DestinationList = () => {
           columns={columns}
           data={data}
           multiSelectDelete={multiSelectDelete}
-          excelDownload={excelDownload}
+          excel={excel}
         />
       </Page>
 

@@ -72,16 +72,8 @@ const RouteList = () => {
   // Excel export
   const header = ["Route Name", "From", "To", "Distance", "Duration", "Map Link", "Status"];
   const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
-  const excelDownload = () => {
-    downloadExcel({
-      fileName: "Route Excel File",
-      sheet: "react-export-table-to-excel",
-      tablePayload: {
-        header,
-        body: body,
-      },
-    });
-  }
+  const fileName = "Route Excel Sheet";
+  const excel = { header, body, fileName };
   // Excel export end
 
   // Fetch data
@@ -237,7 +229,7 @@ const RouteList = () => {
           columns={columns}
           data={data}
           multiSelectDelete={multiSelectDelete}
-          excelDownload={excelDownload}
+          excel={excel}
         />
       </Page>
 

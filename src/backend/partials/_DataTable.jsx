@@ -4,11 +4,11 @@ import customStyles from '../../helper/DataTableHelper'
 import Paginate from './Paginate'
 import { useBackendConext } from '../../context/BackendContext'
 
-function _DataTable({ columns, data, multiSelectDelete, excelDownload }) {
+function _DataTable({ columns, data, multiSelectDelete, excel }) {
 
     const { state, dispatch } = useBackendConext();
     const { perPageLimit, search, pending, selectedRows } = state;
-    const { modalOpen, perPageLimitHandler, searchHandler, handleChange } = dispatch;
+    const { modalOpen, perPageLimitHandler, searchHandler, handleChange, excelDownload } = dispatch;
 
     return (
         <>
@@ -22,7 +22,7 @@ function _DataTable({ columns, data, multiSelectDelete, excelDownload }) {
                     </select>
                     <button onClick={multiSelectDelete} disabled={selectedRows?.length <= 0} className='btn btn-danger' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-fw fa-trash'></i>Delete</button>
                     <button onClick={modalOpen} className='btn btn-success' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-file-excel-o'></i>Import</button>
-                    <button onClick={excelDownload} className='btn btn-info' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-download'></i>Export</button>
+                    <button onClick={() => excelDownload(excel)} className='btn btn-info' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-download'></i>Export</button>
                 </div>
                 <input style={{ width: '200px' }} value={search} placeholder='Search....' className='form-control' type="search" onChange={searchHandler} />
             </div>
