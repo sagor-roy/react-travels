@@ -3,16 +3,17 @@ import DataTable from '../../../partials/_DataTable';
 import { Link } from 'react-router-dom';
 import ExampleFile from './file/example.xlsx';
 import toast from 'react-hot-toast';
-import Swal from 'sweetalert2';
 import Page from '../../../partials/_Page';
 import config from '../../../../config/config';
 import { useBackendConext } from '../../../../context/BackendContext';
+import Swal from 'sweetalert2';
+import useBackendApi from '../../../../hooks/useBackendApi';
 
 const RouteList = () => {
   const { state, dispatch } = useBackendConext();
-  const { modal, activePage, perPageLimit, search, pending, file, selectedRows } = state;
+  const { data, fetchData, deleteHandler } = useBackendApi();
+  const { file } = state;
   const { modalOpen, pendingHandler } = dispatch;
-  const [data, setData] = useState([]);
   const [columns, setColumns] = useState([
     {
       name: 'Id',
@@ -60,13 +61,13 @@ const RouteList = () => {
     },
     {
       name: 'Action',
-      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin/route/edit/${row?.id}`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => singleItemDeleteHandler(row?.id)} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
+      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin/route/edit/${row?.id}`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => deleteHandler(row?.id, 'route')} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
     },
   ]);
-
+  
   // Excel export
   const header = ["Route Name", "From", "To", "Distance", "Duration", "Map Link", "Status"];
   const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
@@ -74,29 +75,13 @@ const RouteList = () => {
   const excel = { header, body, fileName };
   // Excel export end
 
-  // Fetch data
-  const fetchData = useCallback(async () => {
-    try {
-      const response = await fetch(`${config.endpoint}/route?page=${activePage}&limit=${perPageLimit}&search=${search}`);
-      const result = await response.json();
-      if (result?.status === 'success') {
-        setData(result?.data);
-        pendingHandler(false);
-      } else {
-        toast.error(result?.message)
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }, [activePage, perPageLimit, search]);
-  // Fetch data end
-
   // Hooks
   useEffect(() => {
-    fetchData();
+    fetchData('route');
     pendingHandler(true)
   }, [fetchData]);
   // Hooks end
+
 
 
   // Excel import
@@ -118,7 +103,7 @@ const RouteList = () => {
       });
       const result = await response.json();
       pendingHandler(false)
-      fetchData();
+      fetchData('route');
       if (result?.status === 'success') {
         toast.success("Data Successfully Import")
         modalOpen();
@@ -138,54 +123,6 @@ const RouteList = () => {
   };
   // Excel import end
 
-  // multi select data delete handler
-  const multiSelectDelete = async () => {
-    await deleteHandler(selectedRows.join(','))
-    //setSelectedRows([]);
-  };
-
-  const singleItemDeleteHandler = async (id) => {
-    await deleteHandler(id);
-  }
-
-  // delete handler
-  const deleteHandler = async (id) => {
-    try {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const response = await fetch(`${config.endpoint}/route/${id}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          });
-          const result = await response.json();
-
-          if (result?.status === 'success') {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success"
-            });
-            fetchData();
-          } else {
-            toast.error(result?.message)
-          }
-        }
-      });
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
   // status handler
   const statusHandler = useCallback(async (id, e) => {
     try {
@@ -200,12 +137,12 @@ const RouteList = () => {
 
       if (result?.status === 'success') {
         // Update the data state immutably
-        setData(prevData => ({
-          ...prevData,
-          data: prevData?.data?.map(item =>
-            item.id === id ? { ...item, status: e.target.checked ? 0 : 1 } : item
-          ),
-        }));
+        // setData(prevData => ({
+        //   ...prevData,
+        //   data: prevData?.data?.map(item =>
+        //     item.id === id ? { ...item, status: e.target.checked ? 0 : 1 } : item
+        //   ),
+        // }));
         toast.success('Status Updated');
       } else {
         toast.error(result?.message)
@@ -227,8 +164,8 @@ const RouteList = () => {
         <DataTable
           columns={columns}
           data={data}
-          multiSelectDelete={multiSelectDelete}
           excel={excel}
+          deleteUrlPath="route"
         />
       </Page>
     </>

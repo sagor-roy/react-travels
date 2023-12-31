@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import DataTable from 'react-data-table-component'
 import customStyles from '../../helper/DataTableHelper'
 import Paginate from './Paginate'
 import { useBackendConext } from '../../context/BackendContext'
+import useBackendApi from '../../hooks/useBackendApi'
 
-function _DataTable({ columns, data, multiSelectDelete, excel }) {
-
+function _DataTable({ columns, data, excel, deleteUrlPath }) {
     const { state, dispatch } = useBackendConext();
+    const { deleteHandler, data: api } = useBackendApi();
     const { perPageLimit, search, pending, selectedRows } = state;
     const { modalOpen, perPageLimitHandler, searchHandler, handleChange, excelDownload } = dispatch;
+
+    console.log('api', api);
+    console.log('data',data);
 
     return (
         <>
@@ -20,7 +24,7 @@ function _DataTable({ columns, data, multiSelectDelete, excel }) {
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
-                    <button onClick={multiSelectDelete} disabled={selectedRows?.length <= 0} className='btn btn-danger' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-fw fa-trash'></i>Delete</button>
+                    <button onClick={() => deleteHandler(selectedRows.join(','), deleteUrlPath)} disabled={selectedRows?.length <= 0} className='btn btn-danger' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-fw fa-trash'></i>Delete</button>
                     <button onClick={modalOpen} className='btn btn-success' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-file-excel-o'></i>Import</button>
                     <button onClick={() => excelDownload(excel)} className='btn btn-info' style={{ padding: '0 10px' }}><i style={{ marginRight: '5px' }} className='fa fa-download'></i>Export</button>
                 </div>
