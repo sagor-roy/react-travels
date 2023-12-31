@@ -8,7 +8,7 @@ function _DataTable({ columns, data, multiSelectDelete, excelDownload }) {
 
     const { state, dispatch } = useBackendConext();
     const { perPageLimit, search, pending, selectedRows } = state;
-    const { modalOpen, handlePageChange, perPageLimitHandler, searchHandler, handleChange } = dispatch;
+    const { modalOpen, perPageLimitHandler, searchHandler, handleChange } = dispatch;
 
     return (
         <>
@@ -42,7 +42,7 @@ function _DataTable({ columns, data, multiSelectDelete, excelDownload }) {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 20px' }}>
                 <p style={{ margin: '0px' }}>Show {data?.from}-{data?.per_page} of {data?.total}</p>
-                <Paginate data={data} handlePageChange={handlePageChange} />
+                <Paginate data={data} />
             </div>
         </>
     )

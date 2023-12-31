@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pagination from 'react-js-pagination';
+import { useBackendConext } from '../../context/BackendContext';
 
-function Paginate({ data, handlePageChange }) {
+function Paginate({ data }) {
+    const { dispatch } = useBackendConext();
+    const { handlePageChange } = dispatch;
     const { current_page, per_page, total, links } = data;
     // Check if total is defined before rendering Pagination
     if (typeof total === 'undefined') {
