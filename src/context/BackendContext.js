@@ -42,8 +42,6 @@ const BackendProvider = ({ children }) => {
         
     }, []);
 
-    console.log(selectedRows);
-
 
     const state = {
         activePage,

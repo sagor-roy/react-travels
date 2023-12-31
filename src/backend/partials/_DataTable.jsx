@@ -4,10 +4,10 @@ import customStyles from '../../helper/DataTableHelper'
 import Paginate from './Paginate'
 import { useBackendConext } from '../../context/BackendContext'
 
-function _DataTable({ columns, data, multiSelectDelete, excelDownload, selectedRows }) {
+function _DataTable({ columns, data, multiSelectDelete, excelDownload }) {
 
     const { state, dispatch } = useBackendConext();
-    const { perPageLimit, search, pending } = state;
+    const { perPageLimit, search, pending, selectedRows } = state;
     const { modalOpen, handlePageChange, perPageLimitHandler, searchHandler, handleChange } = dispatch;
 
     return (
