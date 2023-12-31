@@ -5,16 +5,14 @@ import { downloadExcel } from 'react-export-table-to-excel';
 import ExampleFile from './file/example.xlsx';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
-import Modal from '../../../partials/_Modal';
 import Page from '../../../partials/_Page';
 import config from '../../../../config/config';
 import { useBackendConext } from '../../../../context/BackendContext';
-import { excel } from 'react-export-table-to-excel/lib/lib';
 
 const DestinationList = () => {
   const { state, dispatch } = useBackendConext();
   const { modal, activePage, perPageLimit, search, pending, file, selectedRows } = state;
-  const { modalOpen, pendingHandler, handleFileChange } = dispatch;
+  const { modalOpen, pendingHandler } = dispatch;
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([
     {
@@ -210,7 +208,13 @@ const DestinationList = () => {
 
   return (
     <>
-      <Page pageTitle={`Destination`} url={`/admin/destination/create`} status="create">
+      <Page
+        pageTitle={`Destination`}
+        url={`/admin/destination/create`}
+        status="create"
+        excelFile={ExampleFile}
+        handleUpload={handleUpload}
+      >
         <DataTable
           columns={columns}
           data={data}
@@ -218,19 +222,6 @@ const DestinationList = () => {
           excel={excel}
         />
       </Page>
-
-      {/* import excel */}
-      {modal && <Modal headerText={`Import`}>
-        <form style={{ marginTop: '10px' }} onSubmit={handleUpload}>
-          <input type="file" onChange={handleFileChange} className='form-control is-invalid' accept='.xlsx' />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-            <button disabled={pending} className='btn btn-primary btn-sm' type="submit">{!pending ? 'Import' : 'Loading...'}</button>
-            <a href={ExampleFile}>
-              <i className='fa fa-download'></i> Example Excel
-            </a>
-          </div>
-        </form>
-      </Modal>}
     </>
   );
 };

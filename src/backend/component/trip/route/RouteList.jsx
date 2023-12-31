@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import DataTable from '../../../partials/_DataTable';
 import { Link } from 'react-router-dom';
-import { downloadExcel } from 'react-export-table-to-excel';
 import ExampleFile from './file/example.xlsx';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
-import Modal from '../../../partials/_Modal';
 import Page from '../../../partials/_Page';
 import config from '../../../../config/config';
 import { useBackendConext } from '../../../../context/BackendContext';
@@ -13,7 +11,7 @@ import { useBackendConext } from '../../../../context/BackendContext';
 const RouteList = () => {
   const { state, dispatch } = useBackendConext();
   const { modal, activePage, perPageLimit, search, pending, file, selectedRows } = state;
-  const { modalOpen, pendingHandler, handleFileChange } = dispatch;
+  const { modalOpen, pendingHandler } = dispatch;
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([
     {
@@ -140,8 +138,6 @@ const RouteList = () => {
   };
   // Excel import end
 
-
-
   // multi select data delete handler
   const multiSelectDelete = async () => {
     await deleteHandler(selectedRows.join(','))
@@ -190,7 +186,6 @@ const RouteList = () => {
     }
   }
 
-
   // status handler
   const statusHandler = useCallback(async (id, e) => {
     try {
@@ -220,11 +215,15 @@ const RouteList = () => {
     }
   }, []);
 
-
-
   return (
     <>
-      <Page pageTitle={`Route`} url={`/admin/route/create`} status="create">
+      <Page
+        pageTitle={`Route`}
+        url={`/admin/route/create`}
+        status="create"
+        excelFile={ExampleFile}
+        handleUpload={handleUpload}
+      >
         <DataTable
           columns={columns}
           data={data}
@@ -232,19 +231,6 @@ const RouteList = () => {
           excel={excel}
         />
       </Page>
-
-      {/* import excel */}
-      {modal && <Modal headerText={`Import`}>
-        <form style={{ marginTop: '10px' }} onSubmit={handleUpload}>
-          <input type="file" onChange={handleFileChange} className='form-control is-invalid' accept='.xlsx' />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-            <button disabled={pending} className='btn btn-primary btn-sm' type="submit">{!pending ? 'Import' : 'Loading...'}</button>
-            <a href={ExampleFile}>
-              <i className='fa fa-download'></i> Example Excel
-            </a>
-          </div>
-        </form>
-      </Modal>}
     </>
   );
 };
