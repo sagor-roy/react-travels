@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import DataTable from '../../../partials/_DataTable';
 import { Link } from 'react-router-dom';
-import { downloadExcel } from 'react-export-table-to-excel';
 import ExampleFile from './file/example.xlsx';
 import toast from 'react-hot-toast';
-import Swal from 'sweetalert2';
 import Page from '../../../partials/_Page';
 import config from '../../../../config/config';
 import { useBackendConext } from '../../../../context/BackendContext';
