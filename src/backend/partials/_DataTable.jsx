@@ -1,18 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import DataTable from 'react-data-table-component'
-import customStyles from '../../helper/DataTableHelper'
-import Paginate from './Paginate'
-import { useBackendConext } from '../../context/BackendContext'
-import useBackendApi from '../../hooks/useBackendApi'
+import customStyles from '../../helper/DataTableHelper';
+import Paginate from './Paginate';
+import { useBackendConext } from '../../context/BackendContext';
 
-function _DataTable({ columns, data, excel, deleteUrlPath }) {
+function _DataTable({ columns, data, excel, deleteHandler, deleteUrlPath }) {
     const { state, dispatch } = useBackendConext();
-    const { deleteHandler, data: api } = useBackendApi();
     const { perPageLimit, search, pending, selectedRows } = state;
     const { modalOpen, perPageLimitHandler, searchHandler, handleChange, excelDownload } = dispatch;
-
-    console.log('api', api);
-    console.log('data',data);
 
     return (
         <>
@@ -38,7 +33,7 @@ function _DataTable({ columns, data, excel, deleteUrlPath }) {
                     selectableRows
                     highlightOnHover
                     pointerOnHover
-                    customStyles={customStyles()}
+                    customStyles={customStyles}
                     progressPending={pending}
                     onSelectedRowsChange={handleChange}
                 />

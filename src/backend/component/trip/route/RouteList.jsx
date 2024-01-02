@@ -166,6 +166,7 @@ const RouteList = () => {
           data={data}
           excel={excel}
           deleteUrlPath="route"
+          deleteHandler={deleteHandler}
         />
       </Page>
     </>

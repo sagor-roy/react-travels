@@ -155,6 +155,7 @@ const DestinationList = () => {
           data={data}
           excel={excel}
           deleteUrlPath="destination"
+          deleteHandler={deleteHandler}
         />
       </Page>
     </>
