@@ -114,11 +114,11 @@ function Sidebar() {
                     children: [
                         {
                             title: "Add Schedule",
-                            url: "#"
+                            url: "schedule/create"
                         },
                         {
                             title: "Schedule List",
-                            url: "#"
+                            url: "schedule/list"
                         }
                     ]
                 },

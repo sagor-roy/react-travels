@@ -9,6 +9,9 @@ import RouteCreate from "./backend/component/trip/route/RouteCreate";
 import RouteList from "./backend/component/trip/route/RouteList";
 import RouteEdit from "./backend/component/trip/route/RouteEdit";
 import { BackendProvider } from "./context/BackendContext";
+import ScheduleCreate from "./backend/component/trip/schedule/ScheduleCreate";
+import ScheduleList from "./backend/component/trip/schedule/ScheduleList";
+import ScheduleEdit from "./backend/component/trip/schedule/ScheduleEdit";
 
 const router = createBrowserRouter([
     {
@@ -46,6 +49,18 @@ const router = createBrowserRouter([
             {
                 path: 'route/edit/:id',
                 element: <RouteEdit />,
+            },
+            {
+                path: 'schedule/create',
+                element: <ScheduleCreate />,
+            },
+            {
+                path: 'schedule/list',
+                element: <ScheduleList />,
+            },
+            {
+                path: 'schedule/edit/:id',
+                element: <ScheduleEdit />,
             },
         ],
     },
