@@ -180,7 +180,9 @@ function Sidebar() {
         return items.map((item) => {
             const updatedItem = { ...item };
             const cleanedPath = cleanPath(currentPath);
-            if (item.url === cleanedPath) {
+            const itemUrl = item.url;
+            const withoutLeadingSlash = itemUrl.startsWith('/') ? itemUrl.substring(1) : itemUrl;
+            if (withoutLeadingSlash === cleanedPath) {
                 updatedItem.status = true;
             } else if (item.children && item.children.length > 0) {
                 updatedItem.children = updateStatusRecursively(item.children, cleanedPath);
