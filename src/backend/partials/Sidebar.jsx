@@ -174,8 +174,6 @@ function Sidebar() {
         return withoutLeadingSlash.startsWith('admin/') ? withoutLeadingSlash.substring(6) : withoutLeadingSlash;
     };
 
-    console.log(cleanPath(location.pathname));
-
     const updateStatusRecursively = (items, currentPath) => {
         return items.map((item) => {
             const updatedItem = { ...item };
@@ -197,8 +195,6 @@ function Sidebar() {
     useEffect(() => {
         setTree((prevTree) => updateStatusRecursively(prevTree, location.pathname));
     }, [location.pathname]);
-
-    console.log(tree);
 
     const [openStates, setOpenStates] = useState(tree.map(() => false));
     const [childOpenStates, setChildOpenStates] = useState(tree.map(() => []));
