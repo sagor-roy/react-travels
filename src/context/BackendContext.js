@@ -10,8 +10,8 @@ const BackendProvider = ({ children }) => {
     const [search, setSearch] = useState("");
     const [pending, setPending] = useState(true);
     const [selectedRows, setSelectedRows] = useState([]);
-    const [file, setFile] = useState(null);
     const [modal, setModal] = useState(false);
+    const [file, setFile] = useState(null);
 
     // modal open
     const modalOpen = () => {
@@ -37,6 +37,7 @@ const BackendProvider = ({ children }) => {
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
+
     // selected row handler
     const handleChange = useCallback(state => {
         setSelectedRows(state?.selectedRows?.map(item => item?.id));
@@ -53,15 +54,14 @@ const BackendProvider = ({ children }) => {
         });
     }
 
-
     const state = {
         activePage,
         perPageLimit,
         search,
         pending,
         selectedRows,
-        file,
-        modal
+        modal,
+        file
     }
 
     const dispatch = {
@@ -70,9 +70,9 @@ const BackendProvider = ({ children }) => {
         perPageLimitHandler,
         searchHandler,
         pendingHandler,
-        handleFileChange,
         handleChange,
-        excelDownload
+        excelDownload,
+        handleFileChange
     }
 
     return (

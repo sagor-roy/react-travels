@@ -7,8 +7,8 @@ import { useBackendConext } from '../context/BackendContext';
 
 const useBackendApi = () => {
     const { state, dispatch } = useBackendConext();
-    const { activePage, perPageLimit, search } = state;
-    const { pendingHandler } = dispatch;
+    const { activePage, perPageLimit, search, file } = state;
+    const { pendingHandler, modalOpen } = dispatch;
     const [data, setData] = useState([]);
 
     const fetchData = useCallback(async (urlPath) => {
@@ -62,9 +62,75 @@ const useBackendApi = () => {
         } catch (error) {
             console.error('Error:', error);
         }
+    }, [fetchData]);
+
+    const handleUpload = useCallback(async (e, urlPath) => {
+        e.preventDefault();
+        pendingHandler(true)
+        if (!file) {
+            pendingHandler(false)
+            toast.error('No file selected');
+            return;
+        }
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch(`${config.endpoint}/${urlPath}/excel-store`, {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
+            if (result?.status === 'success') {
+                pendingHandler(false)
+                fetchData(urlPath);
+                toast.success("Data Successfully Import")
+                modalOpen();
+            } else if (result?.status === 'error') {
+                for (const property in result?.data) {
+                    if (Object.hasOwnProperty.call(result?.data, property)) {
+                        const errors = result?.data[property];
+                        toast.error(errors[0]);
+                    }
+                }
+            } else {
+                toast.error(result?.message)
+            }
+        } catch (error) {
+            console.log('Upload error:', error);
+        }
+    }, [modalOpen, fetchData, file]);
+
+    // status handler
+    const statusHandler = useCallback(async (urlPath, id, e) => {
+        try {
+            const response = await fetch(`${config.endpoint}/${urlPath}/status/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: e.target.checked ? "1" : "0" }),
+            });
+            const result = await response.json();
+
+            if (result?.status === 'success') {
+                setData(prevData => ({
+                    ...prevData,
+                    data: prevData?.data?.map(item =>
+                        item.id === id ? { ...item, status: e.target.checked ? 0 : 1 } : item
+                    ),
+                }));
+                toast.success('Status Updated');
+            } else {
+                toast.error(result?.message)
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }, []);
 
-    return { data, fetchData, deleteHandler };
+    return { data, fetchData, deleteHandler, handleUpload, statusHandler };
 };
 
 export default useBackendApi;
