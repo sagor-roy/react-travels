@@ -6,7 +6,7 @@ import Page from '../../../partials/_Page';
 import { useBackendConext } from '../../../../context/BackendContext';
 import useBackendApi from '../../../../hooks/useBackendApi';
 
-const ScheduleList = () => {
+const FleetList = () => {
   const { dispatch } = useBackendConext();
   const { data, fetchData, deleteHandler, handleUpload, statusHandler } = useBackendApi();
   const { pendingHandler } = dispatch;
@@ -18,18 +18,36 @@ const ScheduleList = () => {
       button: true
     },
     {
-      name: 'Start',
-      selector: row => row.start,
+      name: 'Type',
+      selector: row => row.type,
       sortable: true,
     },
     {
-      name: 'End',
-      selector: row => row.end,
+      name: 'Layout',
+      selector: row => row.layout,
       sortable: true
     },
     {
+      name: 'Total Seat',
+      selector: row => row.total,
+      sortable: true
+    },
+    {
+      name: 'Status',
+      cell: (row) => (
+        <label className="switch">
+          <input type="checkbox"
+            onChange={(e) => statusHandler('fleet', row.id, e)}
+            checked={row?.status == 1 ? true : false}
+          />
+          <span className="slider round"></span>
+        </label>),
+      button: true,
+      allowOverflow: true
+    },
+    {
       name: 'Action',
-      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin/schedule/edit/${row?.id}`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => deleteHandler(row?.id, 'schedule')} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
+      cell: (row) => <><Link style={{ marginRight: '3px' }} className='btn btn-xs btn-primary' to={`/admin/fleet/edit/${row?.id}`}><i className='fa fa-fw fa-edit'></i></Link><button onClick={() => deleteHandler(row?.id, 'fleet')} className='btn btn-xs btn-danger' to={`/admin`}><i className='fa fa-fw fa-trash'></i></button></>,
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
@@ -37,15 +55,15 @@ const ScheduleList = () => {
   ]);
 
   // Excel export
-  const header = ["Id", "Start", "End"];
+  const header = ["ID", "Type", "Layout", "Seat", "Total", "Status"];
   const body = data?.data?.map(({ created_at, updated_at, ...rest }) => rest);
-  const fileName = "Schedule Excel Sheet";
+  const fileName = "Fleet Excel Sheet";
   const excel = { header, body, fileName };
   // Excel export end
 
   // Hooks
   useEffect(() => {
-    fetchData('schedule');
+    fetchData('fleet');
     pendingHandler(true)
   }, [fetchData]);
   // Hooks end
@@ -53,18 +71,18 @@ const ScheduleList = () => {
   return (
     <>
       <Page
-        pageTitle={`Schedule`}
-        url={`/admin/schedule/create`}
+        pageTitle={`Fleet`}
+        url={`/admin/fleet/create`}
         status="create"
         excelFile={ExampleFile}
-        fileUploadUrl="schedule"
+        fileUploadUrl="fleet"
         handleUpload={handleUpload}
       >
         <DataTable
           columns={columns}
           data={data}
           excel={excel}
-          deleteUrlPath="schedule"
+          deleteUrlPath="fleet"
           deleteHandler={deleteHandler}
         />
       </Page>
@@ -72,4 +90,4 @@ const ScheduleList = () => {
   );
 };
 
-export default ScheduleList;
+export default FleetList;

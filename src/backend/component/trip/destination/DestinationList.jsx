@@ -50,8 +50,8 @@ const DestinationList = () => {
   ]);
 
   // Excel export
-  const header = ["Destination", "Description", "Status"];
-  const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
+  const header = ["Id", "Destination", "Description", "Status"];
+  const body = data?.data?.map(({ created_at, updated_at, ...rest }) => rest);
   const fileName = "Destination Excel Sheet";
   const excel = { header, body, fileName };
   // Excel export end

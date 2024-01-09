@@ -66,8 +66,8 @@ const RouteList = () => {
   ]);
 
   // Excel export
-  const header = ["Route Name", "From", "To", "Distance", "Duration", "Map Link", "Status"];
-  const body = data?.data?.map(({ id, created_at, updated_at, ...rest }) => rest);
+  const header = ["Id","Route Name", "From", "To", "Distance", "Duration", "Map Link", "Status"];
+  const body = data?.data?.map(({ created_at, updated_at, ...rest }) => rest);
   const fileName = "Route Excel Sheet";
   const excel = { header, body, fileName };
   // Excel export end

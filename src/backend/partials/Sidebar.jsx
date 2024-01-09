@@ -63,12 +63,12 @@ function Sidebar() {
                     children: [
                         {
                             title: "Add Fleet",
-                            url: "#",
+                            url: "fleet/create",
                             status: false,
                         },
                         {
                             title: "Fleet List",
-                            url: "#",
+                            url: "fleet/list",
                             status: false,
                         }
                     ]
@@ -220,7 +220,7 @@ function Sidebar() {
     };
 
     const renderTree = (item, parentIndex) => (
-        <li className={`treeview ${item?.status ? 'menu-open active' : ''} ${openStates[parentIndex] ? 'menu-open' : ''}`} key={parentIndex}>
+        <li className={`treeview ${openStates[parentIndex] || item?.status ? 'menu-open active' : ''}`} key={parentIndex}>
             <Link to={item?.url} onClick={() => toggleTree(parentIndex)}>
                 <i className="fa fa-circle-o text-red"></i> <span>{item.title}</span>
                 {item?.children?.length > 0 && (
@@ -240,7 +240,7 @@ function Sidebar() {
     );
 
     const childRenderTree = (item, parentIndex, childIndex) => (
-        <li className={`treeview ${item?.status ? 'menu-open active' : ''} ${childOpenStates[parentIndex][childIndex] ? 'menu-open' : ''}`} key={childIndex}>
+        <li className={`treeview ${childOpenStates[parentIndex][childIndex] || item?.status ? 'menu-open active' : ''}`} key={childIndex}>
             <Link to={item?.url} onClick={() => childToggleTree(parentIndex, childIndex)}>
                 <i className="fa fa-circle-o"></i> <span>{item.title}</span>
                 {item?.children?.length > 0 && (
