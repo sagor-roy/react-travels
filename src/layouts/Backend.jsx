@@ -12,7 +12,7 @@ import "../assets/backend/bower_components/bootstrap-datepicker/dist/css/bootstr
 import "../assets/backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css";
 import Header from '../backend/partials/Header';
 import Sidebar from '../backend/partials/Sidebar';
-import Footer from '../backend/partials/Footer';
+//import Footer from '../backend/partials/Footer';
 import { Toaster } from 'react-hot-toast';
 
 

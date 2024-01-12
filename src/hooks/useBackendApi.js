@@ -100,7 +100,7 @@ const useBackendApi = () => {
         } catch (error) {
             console.log('Upload error:', error);
         }
-    }, [modalOpen, fetchData, file]);
+    }, [modalOpen, fetchData, file, pendingHandler]);
 
     // status handler
     const statusHandler = useCallback(async (urlPath, id, e) => {

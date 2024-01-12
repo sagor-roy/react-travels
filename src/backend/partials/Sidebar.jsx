@@ -80,12 +80,12 @@ function Sidebar() {
                     children: [
                         {
                             title: "Add Vehicles",
-                            url: "#",
+                            url: "vehicle/create",
                             status: false,
                         },
                         {
                             title: "Vehicles List",
-                            url: "#",
+                            url: "vehicle/list",
                             status: false,
                         }
                     ]
@@ -169,6 +169,9 @@ function Sidebar() {
         }
     ]);
 
+    const [openStates, setOpenStates] = useState(tree.map(() => false)); 
+    const [childOpenStates, setChildOpenStates] = useState(tree.map(() => []));
+
     const cleanPath = (path) => {
         const withoutLeadingSlash = path.startsWith('/') ? path.substring(1) : path;
         return withoutLeadingSlash.startsWith('admin/') ? withoutLeadingSlash.substring(6) : withoutLeadingSlash;
@@ -196,8 +199,6 @@ function Sidebar() {
         setTree((prevTree) => updateStatusRecursively(prevTree, location.pathname));
     }, [location.pathname]);
 
-    const [openStates, setOpenStates] = useState(tree.map(() => false));
-    const [childOpenStates, setChildOpenStates] = useState(tree.map(() => []));
 
     const toggleTree = (index) => {
         setOpenStates((prev) => {

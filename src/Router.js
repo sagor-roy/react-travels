@@ -15,6 +15,9 @@ import ScheduleEdit from "./backend/component/trip/schedule/ScheduleEdit";
 import FleetCreate from "./backend/component/fleet/fleet/FleetCreate";
 import FleetList from "./backend/component/fleet/fleet/FleetList";
 import FleetEdit from "./backend/component/fleet/fleet/FleetEdit";
+import VehicleCreate from "./backend/component/fleet/vehicle/VehicleCreate";
+import VehicleList from "./backend/component/fleet/vehicle/VehicleList";
+import VehicleEdit from "./backend/component/fleet/vehicle/VehicleEdit";
 
 const router = createBrowserRouter([
     {
@@ -77,6 +80,18 @@ const router = createBrowserRouter([
                 path: 'fleet/edit/:id',
                 element: <FleetEdit />,
             },
+            // {
+            //     path: 'vehicle/create',
+            //     element: <VehicleCreate />,
+            // },
+            // {
+            //     path: 'vehicle/list',
+            //     element: <VehicleList />,
+            // },
+            // {
+            //     path: 'vehicle/edit/:id',
+            //     element: <VehicleEdit />,
+            // },
         ],
     },
     {
