@@ -24,6 +24,7 @@ const VehicleCreate = ({ paramId }) => {
         const response = await fetch(`${config.endpoint}/vehicle/${paramId}/edit`);
         const result = await response.json();
         if (result?.status === 'success') {
+          console.log(response);
           setRegis(result?.data?.regis)
           setType(result?.data?.type)
           setEngineNo(result?.data?.engine_no)

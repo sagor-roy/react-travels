@@ -80,18 +80,18 @@ const router = createBrowserRouter([
                 path: 'fleet/edit/:id',
                 element: <FleetEdit />,
             },
-            // {
-            //     path: 'vehicle/create',
-            //     element: <VehicleCreate />,
-            // },
-            // {
-            //     path: 'vehicle/list',
-            //     element: <VehicleList />,
-            // },
-            // {
-            //     path: 'vehicle/edit/:id',
-            //     element: <VehicleEdit />,
-            // },
+            {
+                path: 'vehicle/create',
+                element: <VehicleCreate />,
+            },
+            {
+                path: 'vehicle/list',
+                element: <VehicleList />,
+            },
+            {
+                path: 'vehicle/edit/:id',
+                element: <VehicleEdit />,
+            },
         ],
     },
     {
