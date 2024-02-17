@@ -4,6 +4,7 @@ import Page from '../../../partials/_Page';
 import toast from 'react-hot-toast';
 import config from '../../../../config/config';
 import { useEffect } from 'react';
+import TextEditor from '../../../../helper/TextEditor';
 
 const RouteCreate = ({ paramId }) => {
   const [name, setName] = useState('');
@@ -211,7 +212,8 @@ const RouteCreate = ({ paramId }) => {
                   <label>Google Map<sup className="text-danger">*</sup> :</label>
                 </div>
                 <div className="col-md-10">
-                  <textarea value={map} onChange={(e) => setMap(e.target.value)} name="map" placeholder="Google map link" rows="5" className="form-control"></textarea>
+                  {/* <textarea value={map} onChange={(e) => setMap(e.target.value)} name="map" placeholder="Google map link" rows="5" className="form-control"></textarea> */}
+                  <TextEditor/>
                 </div>
               </div>
             </div>

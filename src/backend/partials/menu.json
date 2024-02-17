@@ -1,0 +1,165 @@
+[
+    {
+        "title": "Dashboard",
+        "url": "/admin",
+        "status": false,
+        "children": []
+    },
+    {
+        "title": "Ticket Management",
+        "url": "#",
+        "status": false,
+        "children": [
+            {
+                "title": "Booking Information",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Booking",
+                        "url": "#",
+                        "status": false
+                    },
+                    {
+                        "title": "Booking List",
+                        "url": "#",
+                        "status": false
+                    }
+                ]
+            },
+            {
+                "title": "Passenger Information",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Passenger",
+                        "url": "#",
+                        "status": false
+                    },
+                    {
+                        "title": "Passenger List",
+                        "url": "#",
+                        "status": false
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Fleet Management",
+        "url": "#",
+        "status": false,
+        "children": [
+            {
+                "title": "Fleet Type",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Fleet",
+                        "url": "fleet/create",
+                        "status": false
+                    },
+                    {
+                        "title": "Fleet List",
+                        "url": "fleet/list",
+                        "status": false
+                    }
+                ]
+            },
+            {
+                "title": "Vehicles",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Vehicles",
+                        "url": "vehicle/create",
+                        "status": false
+                    },
+                    {
+                        "title": "Vehicles List",
+                        "url": "vehicle/list",
+                        "status": false
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Trip Management",
+        "url": "#",
+        "status": false,
+        "children": [
+            {
+                "title": "Destination",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Destination",
+                        "url": "destination/create",
+                        "status": false
+                    },
+                    {
+                        "title": "Destination List",
+                        "url": "destination/list",
+                        "status": false
+                    }
+                ]
+            },
+            {
+                "title": "Route",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Route",
+                        "url": "route/create",
+                        "status": false
+                    },
+                    {
+                        "title": "Route List",
+                        "url": "route/list",
+                        "status": false
+                    }
+                ]
+            },
+            {
+                "title": "Schedule",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Schedule",
+                        "url": "schedule/create",
+                        "status": false
+                    },
+                    {
+                        "title": "Schedule List",
+                        "url": "schedule/list",
+                        "status": false
+                    }
+                ]
+            },
+            {
+                "title": "Trip",
+                "url": "#",
+                "status": false,
+                "children": [
+                    {
+                        "title": "Add Trip",
+                        "url": "#",
+                        "status": false
+                    },
+                    {
+                        "title": "Trip List",
+                        "url": "#",
+                        "status": false
+                    }
+                ]
+            }
+        ]
+    }
+]
